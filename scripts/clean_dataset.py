@@ -39,7 +39,9 @@ BMI_RANGE = (12, 70)
 
 
 def load_metadata(path):
-    Y = pd.read_csv(os.path.join(path, "ptbxl_database.csv"), index_col="ecg_id")
+    Y = pd.read_csv(
+        os.path.join(path, "ptbxl_database.csv"), index_col="ecg_id"
+    )
     Y["scp_codes"] = Y["scp_codes"].apply(ast.literal_eval)
 
     agg_df = pd.read_csv(os.path.join(path, "scp_statements.csv"), index_col=0)
@@ -88,7 +90,9 @@ def clean_metadata(Y, agg_df, min_likelihood=0):
         Y[f"has_{col}"] = Y[col].notna()
 
     # unify missing markers / types
-    Y["infarction_stadium1"] = Y["infarction_stadium1"].replace("unknown", np.nan)
+    Y["infarction_stadium1"] = Y["infarction_stadium1"].replace(
+        "unknown", np.nan
+    )
     Y["heart_axis"] = Y["heart_axis"].fillna("unknown")
     Y["recording_date"] = pd.to_datetime(Y["recording_date"])
 
@@ -129,7 +133,8 @@ def load_signals(Y, sampling_rate, path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--config", default="config.yml")
     parser.add_argument("--out-dir")
@@ -140,7 +145,9 @@ def main():
         help="ignore SCP statements below this likelihood (0-100)",
     )
     parser.add_argument(
-        "--signals", action="store_true", help="also load and save the ECG signals as X.npy"
+        "--signals",
+        action="store_true",
+        help="also load and save the ECG signals as X.npy",
     )
     args = parser.parse_args()
 

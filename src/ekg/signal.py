@@ -6,13 +6,14 @@ import pandas as pd
 from PyEMD import EMD
 from scipy.signal import butter, hilbert, sosfiltfilt
 
-from ekg.const import LEADS
+from ekg.const import LEADS, SEED
 
 logger = logging.getLogger(__name__)
 
 
 def hht(signal, fs, emd):
-    """EMD + Hilbert -> instantaneous frequency [Hz] and amplitude of every IMF."""
+    """EMD + Hilbert -> instantaneous frequency [Hz] and amplitude of every
+    IMF."""
     imfs = emd(signal)  # (n_imfs, n_samples)
     analytic = hilbert(imfs, axis=1)
     amp = np.abs(analytic)[:, 1:]
@@ -35,18 +36,29 @@ def highpass(sig, fs, cutoff=0.5, order=4):
     return sosfiltfilt(sos, sig, axis=0)
 
 
-def pick_records(labels, classes, n=50, single=True, seed=0):
+def pick_records(
+    labels, classes, n: int = 50, single: bool = True, seed: int = None
+):
     """Random sample of ecg_ids per class.
 
-    single=True keeps only records with exactly one superclass, so e.g. an [MI, CD] record does not
-    blur both classes. Returns {class: array of ecg_ids}.
+    single=True keeps only records with exactly one superclass, so e.g. an [MI,
+    CD] record does not blur both classes. Returns {class: array of ecg_ids}.
 
     """
+    if seed is None:
+        seed = SEED
+
     mask_single = labels[classes].sum(axis=1) == 1
     picks = {}
     for class_name in classes:
-        ids = labels.index[(labels[class_name] == 1) & (mask_single if single else True)]
-        picks[class_name] = pd.Series(ids).sample(min(n, len(ids)), random_state=seed).to_numpy()
+        ids = labels.index[
+            (labels[class_name] == 1) & (mask_single if single else True)
+        ]
+        picks[class_name] = (
+            pd.Series(ids)
+            .sample(min(n, len(ids)), random_state=seed)
+            .to_numpy()
+        )
     return picks
 
 
@@ -64,11 +76,15 @@ def signal_stats(X, Y, picks, fs):
         for ecg_id in ids:
             rec = highpass(X[Y.index.get_loc(ecg_id)], fs)  # (T, 12)
 
-            cleaned = nk.ecg_clean(rec[:, 1], sampling_rate=fs, method="neurokit")
+            cleaned = nk.ecg_clean(
+                rec[:, 1], sampling_rate=fs, method="neurokit"
+            )
             # get the samples at which R-peaks occur in EKG signal
             _, rpeaks_info = nk.ecg_peaks(cleaned, sampling_rate=fs)
             rr_intervals = np.diff(rpeaks_info["ECG_R_Peaks"]) / fs
-            heart_rate = 60 / np.median(rr_intervals) if len(rr_intervals) else np.nan
+            heart_rate = (
+                60 / np.median(rr_intervals) if len(rr_intervals) else np.nan
+            )
 
             for k, lead in enumerate(LEADS):
                 rows.append(
@@ -87,7 +103,9 @@ def signal_stats(X, Y, picks, fs):
     return df
 
 
-def class_spectra(X, Y, picks, fs, freq_bins, crop=(100, 900), normalize=True, verbose=True):
+def class_spectra(
+    X, Y, picks, fs, freq_bins, crop=(100, 900), normalize=True, verbose=True
+):
     """Marginal spectra for every picked record and lead.
 
     crop       - drop samples near the edges (EMD / filter edge effects)
@@ -119,6 +137,10 @@ def summarize_spectra(spectra):
 
     """
     return {
-        cls: (np.median(s, axis=0), np.percentile(s, 25, axis=0), np.percentile(s, 75, axis=0))
+        cls: (
+            np.median(s, axis=0),
+            np.percentile(s, 25, axis=0),
+            np.percentile(s, 75, axis=0),
+        )
         for cls, s in spectra.items()
     }

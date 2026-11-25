@@ -29,14 +29,18 @@ def load_config(cfg_filename: str = "config.yml") -> dict:
     cfg_path = os.path.join(get_project_root(), "configs", cfg_filename)
 
     if not os.path.exists(cfg_path):
-        raise FileNotFoundError("Specified config path does not exist, make sure to store it\
-                in configs/ directory inside the project's root folder")
+        raise FileNotFoundError(
+            "Specified config path does not exist, make sure to store it\
+                in configs/ directory inside the project's root folder"
+        )
 
     with open(cfg_path, "r", encoding="UTF-8") as f:
         cfg = yaml.safe_load(f)
         logger.info("Loaded config from %s", cfg_path)
 
-    cfg["paths"] = {k: to_absolute_path(path) for k, path in cfg["paths"].items()}
+    cfg["paths"] = {
+        k: to_absolute_path(path) for k, path in cfg["paths"].items()
+    }
     logger.debug("Resolved config paths to absolute")
     return cfg
 
