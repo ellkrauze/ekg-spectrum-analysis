@@ -1,0 +1,14 @@
+physionet.org/
+data/
+
+*.zip
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*egg-info/
+
+# macOS
+.DS_Store

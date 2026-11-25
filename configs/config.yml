@@ -1,0 +1,8 @@
+paths:
+  # should be relative to project root dir
+  raw_data: data/raw/ptb-xl-1.0.3/ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.3/
+  processed_data: data/processed/
+  figures: reports/figures/
+data:
+  sampling_rate: 100
+  test_fold: 10
