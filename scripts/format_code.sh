@@ -88,6 +88,7 @@ done
 for base_path in \
     "src/ekg/" \
     "scripts/" \
+    "tests/" \
     ; do
     ${BLACK} ${FORMAT_OPTS} -- "${base_path}"
     ${ISORT} ${FORMAT_OPTS} -- "${base_path}"

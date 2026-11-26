@@ -5,17 +5,22 @@ build-backend = "setuptools.build_meta"
 [tool.isort]
 profile = "black"
 forced_separate = ["tests"]
-line_length = 100
+line_length = 80
 skip_gitignore = true # align tool behavior with Black
 
 # Can't just use a pyproject in the root dir, so duplicate
 # https://github.com/psf/black/issues/2863
 [tool.black]
-line-length = 100
+line-length = 80
 
 [tool.docformatter]
 recursive = true
 blank = true
 style = "google"
-wrap-summaries = 100
-wrap-descriptions = 100
+wrap-summaries = 80
+wrap-descriptions = 80
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+pythonpath = ["src"]
