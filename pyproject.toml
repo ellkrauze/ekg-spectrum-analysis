@@ -1,26 +1,51 @@
 [build-system]
-requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+requires = [ "setuptools", "wheel" ]
 
-[tool.isort]
-profile = "black"
-forced_separate = ["tests"]
-line_length = 80
-skip_gitignore = true # align tool behavior with Black
+[project]
+name = "ekg-ml"
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+]
+dependencies = [ "emd-signal", "neurokit2", "numpy", "pandas", "pyyaml", "scipy", "seaborn", "wfdb" ]
+optional-dependencies.dev = [
+  "black",
+  "docformatter",
+  "ipykernel",
+  "isort",
+  "nbautoexport",
+  "nbqa",
+  "nbstripout",
+  "pip-tools",
+  "pre-commit",
+  "pytest>=9.2",
+  "pytest-cov"
+]
 
 # Can't just use a pyproject in the root dir, so duplicate
 # https://github.com/psf/black/issues/2863
 [tool.black]
 line-length = 80
 
+[tool.isort]
+profile = "black"
+line_length = 80
+skip_gitignore = true  # align tool behavior with Black
+forced_separate = [ "tests" ]
+
 [tool.docformatter]
 recursive = true
-blank = true
-style = "google"
 wrap-summaries = 80
 wrap-descriptions = 80
+blank = true
+style = "google"
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q --cov=."
-pythonpath = ["src"]
+[tool.pytest]
+ini_options.minversion = "6.0"
+ini_options.pythonpath = [ "src" ]
+ini_options.addopts = "-ra -q --cov=."

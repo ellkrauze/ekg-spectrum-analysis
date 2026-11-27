@@ -23,7 +23,7 @@ else
 fi
 DOC_FORMAT_OPTS="${DOC_FORMAT_OPTS:-"${DOC_MODE} --recursive --config $(pwd)/pyproject.toml"}"
 
-PINS="$(grep -E '^(black|isort|docformatter|nbqa|nbstripout)==' requirements.dev.txt)"
+PINS="$(grep -E '^(black|isort|docformatter|nbqa|nbstripout)==' requirements/requirements-dev.txt)"
 CI_PYTHON_VERSION="3.12"
 
 has_pinned_tools() {
