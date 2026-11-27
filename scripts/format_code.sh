@@ -81,7 +81,7 @@ for base_path in \
     ; do
     ${NBQA} black ${FORMAT_OPTS} -- "${base_path}"
     ${NBQA} isort ${FORMAT_OPTS} -- "${base_path}"
-    find "${base_path}" -name '*.ipynb' -exec ${NBSTRIPOUT} ${NBSTRIPMODE} {} +
+    find "${base_path}" -name '*.ipynb' -exec ${NBSTRIPOUT} ${NBSTRIPMODE} --keep-id {} +
 done
 
 # Format *.py files
@@ -99,4 +99,3 @@ for base_path in \
     fi
 
 done
-
