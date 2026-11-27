@@ -16,4 +16,3 @@ fi
 wget "${download_url}" && \
     unzip "ptb-xl-${version}.zip" -d ${data_dir} && \
     rm -fv "ptb-xl-${version}.zip"
-

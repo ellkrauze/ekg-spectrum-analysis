@@ -23,7 +23,7 @@ else
 fi
 DOC_FORMAT_OPTS="${DOC_FORMAT_OPTS:-"${DOC_MODE} --recursive --config $(pwd)/pyproject.toml"}"
 
-PINS="$(grep -E '^(black|isort|docformatter|nbqa|nbstripout)==' requirements.dev.txt)"
+PINS="$(grep -E '^(black|isort|docformatter|nbqa|nbstripout)==' requirements/requirements-dev.txt)"
 CI_PYTHON_VERSION="3.12"
 
 has_pinned_tools() {
@@ -81,7 +81,7 @@ for base_path in \
     ; do
     ${NBQA} black ${FORMAT_OPTS} -- "${base_path}"
     ${NBQA} isort ${FORMAT_OPTS} -- "${base_path}"
-    find "${base_path}" -name '*.ipynb' -exec ${NBSTRIPOUT} ${NBSTRIPMODE} {} +
+    find "${base_path}" -name '*.ipynb' -exec ${NBSTRIPOUT} ${NBSTRIPMODE} --keep-id {} +
 done
 
 # Format *.py files
@@ -99,4 +99,3 @@ for base_path in \
     fi
 
 done
-

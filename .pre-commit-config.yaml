@@ -1,0 +1,29 @@
+repos:
+  - repo: local
+    hooks:
+      - id: save-ipynb-as-py
+        name: Save notebooks as python files
+        entry: .venv/bin/nbautoexport export --export-format script --organize-by extension notebooks/
+        language: system
+        pass_filenames: false
+      - id: format-code
+        name: Format .py and .ipynb code
+        entry: ./scripts/format_code.sh
+        language: script
+      - id: update-requirements
+        name: Update requirements files
+        entry: ./scripts/update_requirements.sh
+        language: script
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: v2.30.2
+    hooks:
+      - id: pyproject-fmt
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: notebooks/script/.*.py
+      - id: end-of-file-fixer
+        exclude: notebooks/script/.*.py
+      - id: check-yaml
+      - id: check-added-large-files
